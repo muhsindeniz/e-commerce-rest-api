@@ -5,12 +5,12 @@ const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi')
 const jwt = require('jsonwebtoken');
 
-const schema = {
-    name: Joi.string().min(6).required(),
-    email: Joi.string().min(6).required().email(),
-    password: Joi.string().min(6).required(),
-    gender: Joi.string().min(3).required()
-}
+// const schema = {
+//     name: Joi.string().min(6).required(),
+//     email: Joi.string().min(6).required().email(),
+//     password: Joi.string().min(6).required(),
+//     gender: Joi.string().min(3).required()
+// }
 
 //Kullanıcı Kaydı
 
@@ -18,19 +18,20 @@ router.post('/register', (req, res) => {
 
     bcrypt.hash(req.body.password, 10, function (err, hashedPass) {
 
-        const { error } = Joi.validate(req.body, schema)
+        // const { error } = Joi.validate(req.body, schema)
 
-        if (error) {
-            return res.status(400).json({
-                message: error.details[0].message
-            })
-        }
+        // if (error) {
+        //     return res.status(400).json({
+        //         message: error.details[0].message
+        //     })
+        // }
 
         const user = new User({
             name: req.body.name,
             email: req.body.email,
             password: hashedPass,
             gender: req.body.gender,
+            birthdayString: req.body.birthdayString,
             avatar: req.body.avatar
         })
 
@@ -160,6 +161,18 @@ router.delete('/user/:id', async (req, res) => {
             }
         })
 
+    }
+})
+
+
+//Kullanıcı Listeleme
+
+router.get('/user', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users)
+    } catch (err) {
+        res.json({message: err})
     }
 })
 

@@ -3,25 +3,28 @@ const mongoose = require('mongoose');
 let User = mongoose.Schema({
     name: {
         type: String,
-        require: true,
         min: 6,
-        max: 255
+        max: 255,
+        default: ""
     },
     email: {
         type: String,
-        require: true,
         min: 6,
-        max: 255
+        max: 255,
+        default: ""
     },
     password: {
         type: String,
-        require: true,
         min: 6,
         max: 1024
     },
     gender: {
         type: String,
-        require: true
+        default: ""
+    },
+    birthdayString: {
+        type: String,
+        default: ""
     },
     roles: {
         type: String,
@@ -29,6 +32,7 @@ let User = mongoose.Schema({
     },
     avatar: {
         type: String,
+        default: ""
     },
     createdAt: {
         type: Date,
