@@ -34,6 +34,14 @@ let User = mongoose.Schema({
         type: String,
         default: ""
     },
+    isLogin: {
+        type: Boolean,
+        default: false
+    },
+    token: {
+        type: String,
+        default: ""
+    },
     createdAt: {
         type: Date,
         default: Date.now

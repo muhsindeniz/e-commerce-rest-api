@@ -2,13 +2,18 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-require('dotenv/config')
+const cors = require('cors');
 const upload = require('./middleware/upload')
 const auth = require('./routes/auth');
+const user = require('./routes/user');
+require('dotenv/config')
 
-app.use('/api',upload.single('avatar') ,auth);
+app.use(bodyParser.json());
+app.use(cors());
+
 app.use('/uploads', express.static('uploads'))
+app.use('/api', upload.single('avatar') ,auth);
+app.use('/api', user);
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {

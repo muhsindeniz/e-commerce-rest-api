@@ -36,7 +36,7 @@ router.post('/register', (req, res) => {
         })
 
         try {
-            if(req.file){
+            if (req.file) {
                 user.avatar = req.file.path
             }
             user.save()
@@ -62,8 +62,6 @@ router.post('/register', (req, res) => {
             res.json({ message: error })
         }
     })
-
-
 })
 
 
@@ -96,7 +94,8 @@ router.post('/login', async (req, res) => {
                                 createdAt: user.createdAt,
                                 birthday: user.birthday,
                                 gender: user.gender,
-                                avatar: user.avatar
+                                avatar: user.avatar,
+                                isLogin: true
                             },
                             result_message: {
                                 type: "success",
@@ -131,49 +130,6 @@ router.post('/login', async (req, res) => {
             }
         })
 
-})
-
-
-//Kullanıcı Silme
-
-router.delete('/user/:id', async (req, res) => {
-    try {
-        const removedUser = await User.remove({ _id: req.params.id });
-        res.json({
-            result: {
-                message: "Kullanıcı başarıyla silindi.."
-            },
-            result_message: {
-                type: "success",
-                title: "Bilgi",
-                message: "Başarılı"
-            }
-        })
-    } catch (error) {
-        res.json({
-            result: {
-                message: "Kullanıcı silinemedi.."
-            },
-            result_message: {
-                type: "error",
-                title: "Bilgi",
-                message: "Hata"
-            }
-        })
-
-    }
-})
-
-
-//Kullanıcı Listeleme
-
-router.get('/user', async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users)
-    } catch (err) {
-        res.json({message: err})
-    }
 })
 
 module.exports = router;
