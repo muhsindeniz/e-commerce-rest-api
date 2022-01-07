@@ -76,14 +76,38 @@ router.post('/login', async (req, res) => {
     User.findOne({ $or: [{ email: email }, { password: password }] })
         .then(user => {
             if (user) {
-                bcrypt.compare(password, user.password, function (err, result) {
+                bcrypt.compare(password, user.password, async function (err, result) {
                     if (err) {
                         res.json({
                             error: err
                         })
                     }
                     if (result) {
-                        let token = jwt.sign({ user }, 'verySecretValue', { expiresIn: '1h' })
+                        let token = jwt.sign({ 
+                            result: {
+                                _id: user._id,
+                                name: user.name,
+                                email: user.email,
+                                roles: user.roles,
+                                createdAt: user.createdAt,
+                                birthday: user.birthday,
+                                gender: user.gender,
+                                avatar: user.avatar,
+                                isLogin: true
+                            }
+                         }, 'verySecretValue', { expiresIn: '1h' })
+
+                        await User.updateOne(
+                            {
+                                 token: user.token
+                            },
+                            {
+                                $set: {
+                                    token: token
+                                }
+                            }
+                        )
+
                         res.json({
                             result: {
                                 token,
@@ -103,6 +127,7 @@ router.post('/login', async (req, res) => {
                                 message: "Başarılı"
                             }
                         })
+
                     } else {
                         res.json({
                             result: {

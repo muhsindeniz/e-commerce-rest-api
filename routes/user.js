@@ -11,16 +11,22 @@ const jwt = require('jsonwebtoken');
 router.get('/user', async (req, res) => {
 
     // console.log(req.headers.authorization)
-    //  User.findOne({ $or: [{ emailtoken: email }] })
-
-    try {
-        const users = await User.find();
-        res.json(users)
-    } catch (err) {
-        res.json({ message: err })
-    }
+    User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+        if(data){
+            const users = await User.find();
+            res.json(users)
+        }else{
+            res.json({
+                result: null,
+                result_message: {
+                    type: "token_refresh",
+                    title: "Bilgilendirme",
+                    message: "Bilgileriniz güncellenmiştir."
+                }
+            })
+        }
+    })
 })
-
 
 //Kullanıcı Silme
 router.delete('/user/:id', async (req, res) => {
@@ -58,7 +64,7 @@ router.patch('/user/:id', async (req, res) => {
         try {
             await User.updateOne(
                 {
-                     _id: req.params.id 
+                    _id: req.params.id
                 },
                 {
                     $set: {
@@ -71,34 +77,34 @@ router.patch('/user/:id', async (req, res) => {
                     }
                 }
             )
-            .then(userInfo => {
-                if(userInfo){
-                    res.json({
-                        result: {
-                            message: "Kullanıcı bilgileri başarıyla güncellendi!"
-                        },
-                        result_message: {
-                            type: "success",
-                            title: "Bilgi",
-                            message: "Başarılı"
-                        }
-                    })
-                   
-                }else{
-                    res.json({
-                        result: {
-                            message: "Kullanıcı bilgileri güncellenemedi!"
-                        },
-                        result_message: {
-                            type: "error",
-                            title: "Bilgi",
-                            message: "Hata"
-                        }
-                    })
-                }
-            })
+                .then(userInfo => {
+                    if (userInfo) {
+                        res.json({
+                            result: {
+                                message: "Kullanıcı bilgileri başarıyla güncellendi!"
+                            },
+                            result_message: {
+                                type: "success",
+                                title: "Bilgi",
+                                message: "Başarılı"
+                            }
+                        })
 
-            
+                    } else {
+                        res.json({
+                            result: {
+                                message: "Kullanıcı bilgileri güncellenemedi!"
+                            },
+                            result_message: {
+                                type: "error",
+                                title: "Bilgi",
+                                message: "Hata"
+                            }
+                        })
+                    }
+                })
+
+
         } catch (err) {
             res.json({
                 result: {
