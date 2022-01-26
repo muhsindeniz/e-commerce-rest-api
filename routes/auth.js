@@ -4,6 +4,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi')
 const jwt = require('jsonwebtoken');
+const { findOne } = require('../models/User');
 
 // const schema = {
 //     name: Joi.string().min(6).required(),
@@ -16,7 +17,7 @@ const jwt = require('jsonwebtoken');
 
 router.post('/register', (req, res) => {
 
-    bcrypt.hash(req.body.password, 10, function (err, hashedPass) {
+    bcrypt.hash(req.body.password, 10, async function (err, hashedPass) {
 
         // const { error } = Joi.validate(req.body, schema)
 
@@ -35,32 +36,47 @@ router.post('/register', (req, res) => {
             avatar: req.body.avatar
         })
 
-        try {
-            if (req.file) {
-                user.avatar = req.file.path
+        const userControl = await User.findOne({ email: req.body.email })
+        if (userControl) {
+            res.json({
+                result_message: {
+                    type: "error",
+                    title: "info",
+                    message: "This e-mail address has been used before"
+                }
+            })
+        } else {
+            try {
+                if (req.file) {
+                    user.avatar = req.file.path
+                }
+
+                user.save()
+                    .then(user => {
+                        res.json({
+                            result_message: {
+                                type: "success",
+                                title: "Info",
+                                message: "Registration done successfully."
+                            }
+                        })
+                    })
+                    .catch(error => {
+                        res.json({
+                            result_message: {
+                                type: "error",
+                                title: "Info",
+                                message: "Registration failed."
+                            }
+                        })
+                    })
+
+            } catch (error) {
+                res.json({ message: error })
             }
-            user.save()
-                .then(user => {
-                    res.json({
-                        result_message: {
-                            type: "success",
-                            title: "Bilgi",
-                            message: "Kayıt başarıyla yapıldı."
-                        }
-                    })
-                })
-                .catch(error => {
-                    res.json({
-                        result_message: {
-                            type: "success",
-                            title: "Bilgi",
-                            message: "Kayıt başarısız."
-                        }
-                    })
-                })
-        } catch (error) {
-            res.json({ message: error })
         }
+
+
     })
 })
 
@@ -83,30 +99,27 @@ router.post('/login', async (req, res) => {
                         })
                     }
                     if (result) {
-                        let token = jwt.sign({ 
+                        let token = jwt.sign({
                             result: {
                                 _id: user._id,
                                 name: user.name,
                                 email: user.email,
                                 roles: user.roles,
                                 createdAt: user.createdAt,
-                                birthday: user.birthday,
+                                birthdayString: user.birthdayString,
                                 gender: user.gender,
                                 avatar: user.avatar,
                                 isLogin: true
                             }
-                         }, 'verySecretValue', { expiresIn: '1h' })
+                        }, 'verySecretValue', { expiresIn: '1h' })
 
-                        await User.updateOne(
-                            {
-                                 token: user.token
-                            },
-                            {
-                                $set: {
-                                    token: token
-                                }
+                        await User.updateOne({
+                            token: user.token
+                        }, {
+                            $set: {
+                                token: token
                             }
-                        )
+                        })
 
                         res.json({
                             result: {
@@ -116,7 +129,7 @@ router.post('/login', async (req, res) => {
                                 email: user.email,
                                 roles: user.roles,
                                 createdAt: user.createdAt,
-                                birthday: user.birthday,
+                                birthdayString: user.birthdayString,
                                 gender: user.gender,
                                 avatar: user.avatar,
                                 isLogin: true

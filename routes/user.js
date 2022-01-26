@@ -120,4 +120,32 @@ router.patch('/user/:id', async (req, res) => {
     })
 })
 
+//Kullanıcı Bilgileri Getirme
+
+router.post('/user/:id', async (req, res) => {
+    try {
+        const user = await User.findById({ _id: req.params.id });
+        res.json({
+            result: user,
+            result_message: {
+                type: "success",
+                title: "Bilgi",
+                message: "Başarılı"
+            }
+        })
+    } catch (error) {
+        res.json({
+            result: {
+                message: "Kullanıcı silinemedi.."
+            },
+            result_message: {
+                type: "error",
+                title: "Bilgi",
+                message: "Hata"
+            }
+        })
+
+    }
+})
+
 module.exports = router;
