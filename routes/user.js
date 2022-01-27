@@ -7,15 +7,14 @@ const jwt = require('jsonwebtoken');
 
 
 //Kullanıcı Listeleme
-
 router.get('/user', async (req, res) => {
 
     // console.log(req.headers.authorization)
     User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
-        if(data){
+        if (data) {
             const users = await User.find();
             res.json(users)
-        }else{
+        } else {
             res.json({
                 result: null,
                 result_message: {
@@ -58,7 +57,6 @@ router.delete('/user/:id', async (req, res) => {
 })
 
 //Kullanıcı Güncelleme
-
 router.patch('/user/:id', async (req, res) => {
     bcrypt.hash(req.body.password, 10, async function (err, hashedPass) {
         try {
@@ -121,7 +119,6 @@ router.patch('/user/:id', async (req, res) => {
 })
 
 //Kullanıcı Bilgileri Getirme
-
 router.post('/user/:id', async (req, res) => {
     try {
         const user = await User.findById({ _id: req.params.id });
@@ -146,6 +143,73 @@ router.post('/user/:id', async (req, res) => {
         })
 
     }
+})
+
+//Kullanıcı şifre değiştirme
+router.post('/updatePassword', async (req, res) => {
+    var password = req.body.password;
+    var newPassword = req.body.newPassword;
+
+    User.findOne({ $or: [{ token: req.headers.authorization }] }, (error, data) => {
+        if (data) {
+            bcrypt.compare(password, data.password, function (err, result) {
+                if (result) {
+                    bcrypt.hash(newPassword, 10, async function (err, hashedPass) {
+                        await User.updateOne({ token: req.headers.authorization },
+                            {
+                                $set: {
+                                    password: hashedPass,
+                                }
+                            })
+                            .then(userInfo => {
+                                console.log(userInfo);
+                                if (userInfo) {
+                                    res.json({
+                                        result: {
+                                            message: "Kullanıcı şifresi başarıyla güncellendi!"
+                                        },
+                                        result_message: {
+                                            type: "success",
+                                            title: "Bilgi",
+                                            message: "Başarılı"
+                                        }
+                                    })
+
+                                } else {
+                                    res.json({
+                                        result: null,
+                                        result_message: {
+                                            type: "error",
+                                            title: "Bilgi",
+                                            message: "Kullanıcı şifresi güncellenemedi!"
+                                        }
+                                    })
+                                }
+                            })
+
+                    })
+                } else {
+                    res.json({
+                        result: null,
+                        result_message: {
+                            type: "error",
+                            title: "Bilgi",
+                            message: "Şuan ki şifreniz doğru değil lütfen kontrol edin!!"
+                        }
+                    })
+                }
+            })
+        } else {
+            res.json({
+                result: null,
+                result_message: {
+                    type: "error",
+                    title: "Bilgilendirme",
+                    message: "Kullanıcı şifresi güncellenemedi!"
+                }
+            })
+        }
+    })
 })
 
 module.exports = router;
