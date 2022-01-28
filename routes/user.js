@@ -4,7 +4,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi')
 const jwt = require('jsonwebtoken');
-
+const Address = require('../models/Address');
 
 //Kullanıcı Listeleme
 router.get('/user', async (req, res) => {
@@ -162,11 +162,10 @@ router.post('/updatePassword', async (req, res) => {
                                 }
                             })
                             .then(userInfo => {
-                                console.log(userInfo);
                                 if (userInfo) {
                                     res.json({
                                         result: {
-                                            message: "Kullanıcı şifresi başarıyla güncellendi!"
+                                            message: "User password updated successfully!"
                                         },
                                         result_message: {
                                             type: "success",
@@ -181,12 +180,11 @@ router.post('/updatePassword', async (req, res) => {
                                         result_message: {
                                             type: "error",
                                             title: "Bilgi",
-                                            message: "Kullanıcı şifresi güncellenemedi!"
+                                            message: "Could not update user password!"
                                         }
                                     })
                                 }
                             })
-
                     })
                 } else {
                     res.json({
@@ -194,7 +192,7 @@ router.post('/updatePassword', async (req, res) => {
                         result_message: {
                             type: "error",
                             title: "Bilgi",
-                            message: "Şuan ki şifreniz doğru değil lütfen kontrol edin!!"
+                            message: "Your current password is not correct, please check!!"
                         }
                     })
                 }
@@ -205,7 +203,106 @@ router.post('/updatePassword', async (req, res) => {
                 result_message: {
                     type: "error",
                     title: "Bilgilendirme",
-                    message: "Kullanıcı şifresi güncellenemedi!"
+                    message: "Could not update user password!"
+                }
+            })
+        }
+    })
+})
+
+//Kullanıcı Teslimat Adresi ekleme
+router.post('/address', async (req, res) => {
+    const address = new Address({
+        id: req.body.id,
+        name: req.body.name,
+        province: req.body.province,
+        district: req.body.district,
+        address: req.body.address,
+        addressTitle: req.body.addressTitle,
+        phone: req.body.phone
+    })
+
+    const adresControl = await Address.findOne({ email: req.body.email })
+    if (adresControl) {
+        res.json({
+            result_message: {
+                type: "error",
+                title: "info",
+                message: "You currently have an active address!!"
+            }
+        })
+    } else {
+        try {
+            address.save()
+                .then(adres => {
+                    res.json({
+                        result_message: {
+                            type: "success",
+                            title: "Info",
+                            message: "Address successfully added.."
+                        }
+                    })
+                })
+                .catch(error => {
+                    res.json({
+                        result_message: {
+                            type: "error",
+                            title: "Info",
+                            message: "Address could not be added!!."
+                        }
+                    })
+                })
+
+        } catch (error) {
+            res.json({ message: error })
+        }
+    }
+})
+
+//Kullanıcı Teslimat Adresi Listeleme
+router.get('/address', async (req, res) => {
+    User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+        if (data) {
+            try {
+                let userAddress = await Address.findOne({ id: req.body.id });
+                if (userAddress) {
+                    res.json({
+                        result: userAddress,
+                        result_message: {
+                            type: "success",
+                            title: "Bilgi",
+                            message: "Başarılı"
+                        }
+                    })
+                } else {
+                    res.json({
+                        result: null,
+                        result_message: {
+                            type: "error",
+                            title: "Bilgi",
+                            message: "Address not found"
+                        }
+                    })
+                }
+            } catch (error) {
+                res.json({
+                    result: null,
+                    result_message: {
+                        type: "error",
+                        title: "Bilgi",
+                        message: "Address not found"
+                    }
+                })
+            }
+
+
+        } else {
+            res.json({
+                result: null,
+                result_message: {
+                    type: "token_refresh",
+                    title: "Bilgilendirme",
+                    message: "Bilgileriniz güncellenmiştir."
                 }
             })
         }

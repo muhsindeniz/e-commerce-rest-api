@@ -14,7 +14,6 @@ const { findOne } = require('../models/User');
 // }
 
 //Kullanıcı Kaydı
-
 router.post('/register', (req, res) => {
 
     bcrypt.hash(req.body.password, 10, async function (err, hashedPass) {
@@ -81,9 +80,7 @@ router.post('/register', (req, res) => {
 })
 
 
-
 //Kullanıcı Girişi
-
 router.post('/login', async (req, res) => {
 
     const email = req.body.email;
