@@ -260,11 +260,11 @@ router.post('/address', async (req, res) => {
 })
 
 //Kullanıcı Teslimat Adresi Listeleme
-router.get('/address', async (req, res) => {
+router.get('/address/:id', async (req, res) => {
     User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
             try {
-                let userAddress = await Address.findOne({ id: req.body.id });
+                let userAddress = await Address.findOne({ id: req.params.id });
                 if (userAddress) {
                     res.json({
                         result: userAddress,
@@ -302,7 +302,57 @@ router.get('/address', async (req, res) => {
                 result_message: {
                     type: "token_refresh",
                     title: "Bilgilendirme",
-                    message: "Bilgileriniz güncellenmiştir."
+                    message: "Your Token Information has been updated."
+                }
+            })
+        }
+    })
+})
+
+//Kullanıcı Teslimat Adresi Silme
+router.delete('/address/:id', async (req, res) => {
+    User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+        if (data) {
+            try {
+                let userAddress = await Address.remove({ id: req.params.id });
+                if (userAddress) {
+                    res.json({
+                        result: userAddress,
+                        result_message: {
+                            type: "success",
+                            title: "info",
+                            message: "Address deleted successfully"
+                        }
+                    })
+                } else {
+                    res.json({
+                        result: null,
+                        result_message: {
+                            type: "error",
+                            title: "info",
+                            message: "Address could not be deleted"
+                        }
+                    })
+                }
+            } catch (error) {
+                res.json({
+                    result: null,
+                    result_message: {
+                        type: "error",
+                        title: "info",
+                        message: "Address could not be deleted"
+                    }
+                })
+            }
+
+
+        } else {
+            res.json({
+                result: null,
+                result_message: {
+                    type: "token_refresh",
+                    title: "Bilgilendirme",
+                    message: "Your Token Information has been updated."
                 }
             })
         }
