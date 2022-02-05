@@ -50,6 +50,10 @@ var Product = new mongoose.Schema({
         type: String,
         default: ""
     },
+    adminId: {
+        type: String,
+        default: ""
+    },
 
 }, { collection: 'product' })
 

@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User')
 const bcrypt = require('bcrypt');
-const Joi = require('@hapi/joi')
 const jwt = require('jsonwebtoken');
-const { findOne } = require('../models/User');
 
 // const schema = {
 //     name: Joi.string().min(6).required(),
@@ -15,7 +13,6 @@ const { findOne } = require('../models/User');
 
 //Kullanıcı Kaydı
 router.post('/register', (req, res) => {
-
     bcrypt.hash(req.body.password, 10, async function (err, hashedPass) {
 
         // const { error } = Joi.validate(req.body, schema)
