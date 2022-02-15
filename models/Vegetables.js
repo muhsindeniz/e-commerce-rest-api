@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Product = new mongoose.Schema({
+var Vegetables = new mongoose.Schema({
     name: {
         type: String,
         default: ""
@@ -55,6 +55,6 @@ var Product = new mongoose.Schema({
         default: ""
     },
 
-}, { collection: 'product' })
+}, { collection: 'vegetables' })
 
-module.exports = mongoose.model('Product', Product)
+module.exports = mongoose.model('Vegetables', Vegetables)

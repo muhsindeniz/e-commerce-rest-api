@@ -1,14 +1,14 @@
 const express = require('express');
 const Admin = require('../models/Admin');
 const router = express.Router();
-const Product = require('../models/Product');
+const Vegetables = require('../models/Vegetables');
 
 //Ürün Listeleme
-router.get('/product', async (req, res) => {
+router.get('/vegetables', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
-            const product = await Product.find();
-            res.json(product)
+            const vegetables = await Vegetables.find();
+            res.json(vegetables)
         } else {
             res.json({
                 result: null,
@@ -23,19 +23,19 @@ router.get('/product', async (req, res) => {
 })
 
 //Ürün Ekleme
-router.post('/addProduct', (req, res) => {
+router.post('/addVegetables', (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, (error, data) => {
         if (data) {
 
-            const product = new Product({
+            const vegetables = new Vegetables({
                 name: req.body.name,
                 price: req.body.price,
                 discount: req.body.discount,
                 newPrice: req.body.newPrice,
-                productDescription: req.body.productDescription,
+                productDescription: req.body.vegetablesDescription,
                 farmerName: req.body.farmerName,
                 avatar: req.body.avatar,
-                productCategory: req.body.productCategory,
+                productCategory: req.body.vegetablesCategory,
                 calorie: req.body.calorie,
                 carbohydrate: req.body.carbohydrate,
                 protein: req.body.protein,
@@ -45,16 +45,16 @@ router.post('/addProduct', (req, res) => {
 
             try {
                 if (req.file) {
-                    product.avatar = req.file.path
+                    vegetables.avatar = req.file.path
                 }
 
-                product.save()
+                vegetables.save()
                     .then(user => {
                         res.json({
                             result_message: {
                                 type: "success",
                                 title: "Info",
-                                message: "The product has been successfully added."
+                                message: "The vegetables has been successfully added."
                             }
                         })
                     })
@@ -63,7 +63,7 @@ router.post('/addProduct', (req, res) => {
                             result_message: {
                                 type: "error",
                                 title: "Info",
-                                message: "The product could not be added"
+                                message: "The vegetables could not be added"
                             }
                         })
                     })
@@ -85,12 +85,12 @@ router.post('/addProduct', (req, res) => {
 })
 
 //Ürün Silme
-router.delete('/product/:id', async (req, res) => {
+router.delete('/vegetables/:id', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
 
             try {
-                const removedProduct = await Product.remove({ _id: req.params.id });
+                const removedProduct = await Vegetables.remove({ _id: req.params.id });
                 res.json({
                     result: {
                         message: "Ürün başarıyla silindi.."
