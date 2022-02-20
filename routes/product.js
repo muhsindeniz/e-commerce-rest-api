@@ -3,7 +3,7 @@ const Admin = require('../models/Admin');
 const router = express.Router();
 const Vegetables = require('../models/Vegetables');
 
-//Ürün Listeleme
+//Sebze Listeleme
 router.get('/vegetables', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
@@ -22,7 +22,7 @@ router.get('/vegetables', async (req, res) => {
     })
 })
 
-//Ürün Ekleme
+//Sebze Ekleme
 router.post('/addVegetables', (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, (error, data) => {
         if (data) {
@@ -84,7 +84,7 @@ router.post('/addVegetables', (req, res) => {
     })
 })
 
-//Ürün Silme
+//Sebze Silme
 router.delete('/vegetables/:id', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {

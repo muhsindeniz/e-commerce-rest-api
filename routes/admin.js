@@ -174,7 +174,8 @@ router.patch('/admin/:id', async (req, res) => {
                     $set: {
                         name: req.body.name,
                         email: req.body.email,
-                        password: hashedPass                    }
+                        password: hashedPass
+                    }
                 }
             )
                 .then(userInfo => {
@@ -222,29 +223,45 @@ router.patch('/admin/:id', async (req, res) => {
 
 //Admin Bilgileri Getirme
 router.post('/admin/:id', async (req, res) => {
-    try {
-        const admin = await Admin.findById({ _id: req.params.id });
-        res.json({
-            result: admin,
-            result_message: {
-                type: "success",
-                title: "Bilgi",
-                message: "Başarılı"
-            }
-        })
-    } catch (error) {
-        res.json({
-            result: {
-                message: "Kullanıcı silinemedi.."
-            },
-            result_message: {
-                type: "error",
-                title: "Bilgi",
-                message: "Hata"
-            }
-        })
 
-    }
+    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+        if (data) {
+            try {
+                const admin = await Admin.findById({ _id: req.params.id });
+                res.json({
+                    result: admin,
+                    result_message: {
+                        type: "success",
+                        title: "Info",
+                        message: "Success"
+                    }
+                })
+            } catch (error) {
+                res.json({
+                    result: {
+                        message: "Admin not found.."
+                    },
+                    result_message: {
+                        type: "error",
+                        title: "Info",
+                        message: "Error"
+                    }
+                })
+
+            }
+        } else {
+            res.json({
+                result: null,
+                result_message: {
+                    type: "token_refresh",
+                    title: "Information",
+                    message: "Bilgileriniz güncellenmiştir."
+                }
+            })
+        }
+    })
+
+
 })
 
 //Admin şifre değiştirme
@@ -312,4 +329,4 @@ router.post('/adminUpdatePassword', async (req, res) => {
     })
 })
 
-module.exports = router ;
+module.exports = router;

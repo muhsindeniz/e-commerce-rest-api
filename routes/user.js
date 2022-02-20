@@ -5,12 +5,13 @@ const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi')
 const jwt = require('jsonwebtoken');
 const Address = require('../models/Address');
+const Admin = require('../models/Admin');
 
 //Kullanıcı Listeleme
 router.get('/user', async (req, res) => {
 
     // console.log(req.headers.authorization)
-    User.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
             const users = await User.find();
             res.json(users)
