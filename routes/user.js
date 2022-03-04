@@ -28,6 +28,56 @@ router.get('/user', async (req, res) => {
     })
 })
 
+//Kullanıcı Bilgileri getirme
+router.get('/user/:id', async (req, res) => {
+    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
+        if (data) {
+            try {
+                const userInfo = await User.findById({ _id: req.params.id });
+                if (userInfo) {
+                    res.json({
+                        result: userInfo,
+                        result_message: {
+                            type: "success",
+                            title: "info",
+                            message: "Information successfully retrieved"
+                        }
+                    })
+                } else {
+                    res.json({
+                        result: null,
+                        result_message: {
+                            type: "error",
+                            title: "info",
+                            message: "Could not get information!!"
+                        }
+                    })
+                }
+            } catch (error) {
+                res.json({
+                    result: null,
+                    result_message: {
+                        type: "error",
+                        title: "info",
+                        message: "Could not get information!!"
+                    }
+                })
+            }
+
+
+        } else {
+            res.json({
+                result: null,
+                result_message: {
+                    type: "token_refresh",
+                    title: "Bilgilendirme",
+                    message: "Your Token Information has been updated."
+                }
+            })
+        }
+    })
+})
+
 //Kullanıcı Silme
 router.delete('/user/:id', async (req, res) => {
     try {

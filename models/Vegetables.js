@@ -32,7 +32,7 @@ var Vegetables = new mongoose.Schema({
     },
     productCategory: {
         type: String,
-        default: ""
+        default: "vegetables"
     },
     calorie: {
         type: String,
