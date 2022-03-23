@@ -15,6 +15,16 @@ app.use(cors());
 
 app.use('/uploads', express.static('uploads'))
 app.use('/api', upload.single('avatar'), auth, user, product, admin);
+app.post('/single', upload.single('image'), (req, res) => {
+    res.send({
+        result: req.file,
+        result_message: {
+            type: "success",
+            title: "Info",
+            message: "Yükleme başarıyla yapıldı"
+        }
+    })
+})
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
