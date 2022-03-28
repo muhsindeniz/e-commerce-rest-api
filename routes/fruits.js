@@ -4,7 +4,7 @@ const router = express.Router();
 const Fruits = require('../models/Fruits');
 
 //Meyve Listeleme
-router.get('/fruits', async (req, res) => {
+router.get('/fruit', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
             const vegetables = await Fruits.find();
@@ -23,8 +23,8 @@ router.get('/fruits', async (req, res) => {
 })
 
 //Meyve Ekleme
-router.post('/addFruits', (req, res) => {
-    const vegetables = new Vegetables({
+router.post('/addFruit', (req, res) => {
+    const vegetables = new Fruits({
         name: req.body.name,
         price: req.body.price,
         discount: req.body.discount,
@@ -142,7 +142,7 @@ router.patch('/fruit/:id', async (req, res) => {
 })
 
 //Meyve Silme
-router.delete('/vegetables/:id', async (req, res) => {
+router.delete('/fruit/:id', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
 
@@ -186,7 +186,7 @@ router.delete('/vegetables/:id', async (req, res) => {
 })
 
 //Meyve Getirme
-router.get('/vegetables/:id', async (req, res) => {
+router.get('/fruit/:id', async (req, res) => {
     try {
         const vegetables = await Fruits.findById({ _id: req.params.id });
         res.json({
