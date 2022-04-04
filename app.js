@@ -11,13 +11,14 @@ const admin = require('./routes/admin');
 const fruits = require('./routes/fruits');
 const farmer = require('./routes/farmer');
 const teas = require('./routes/teas');
+const plants = require('./routes/plants');
 require('dotenv/config')
 
 app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/uploads', express.static('uploads'))
-app.use('/api', upload.single('avatar'), auth, user, product, admin, fruits, farmer, teas);
+app.use('/api', upload.single('avatar'), auth, user, product, admin, fruits, farmer, teas, plants);
 app.post('/single', upload.single('image'), (req, res) => {
     res.send({
         result: req.file,

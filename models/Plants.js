@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var Vegetables = new mongoose.Schema({
+var Plants = new mongoose.Schema({
     name: {
         type: String,
         default: ""
@@ -32,7 +32,7 @@ var Vegetables = new mongoose.Schema({
     },
     productCategory: {
         type: String,
-        default: "vegetables"
+        default: "Fruit"
     },
     calorie: {
         type: String,
@@ -57,11 +57,10 @@ var Vegetables = new mongoose.Schema({
     basket: {
         type: Array
     },
-
     oldOrders: {
         type: Array
     }
 
-}, { collection: 'vegetables' })
+}, { collection: 'plants' })
 
-module.exports = mongoose.model('Vegetables', Vegetables)
+module.exports = mongoose.model('Plants', Plants)

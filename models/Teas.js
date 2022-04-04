@@ -54,6 +54,12 @@ var Teas = new mongoose.Schema({
         type: String,
         default: ""
     },
+    basket: {
+        type: Array
+    },
+    oldOrders: {
+        type: Array
+    }
 
 }, { collection: 'teas' })
 

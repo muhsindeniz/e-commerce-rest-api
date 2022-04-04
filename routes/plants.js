@@ -1,13 +1,13 @@
 const express = require('express');
 const Admin = require('../models/Admin');
 const router = express.Router();
-const Vegetables = require('../models/Vegetables');
+const Plants = require('../models/Plants');
 
-//Sebze Listeleme
-router.get('/vegetables', async (req, res) => {
+//Çay Listeleme
+router.get('/plants', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
-            const vegetables = await Vegetables.find();
+            const vegetables = await Plants.find();
             res.json(vegetables)
         } else {
             res.json({
@@ -22,9 +22,9 @@ router.get('/vegetables', async (req, res) => {
     })
 })
 
-//Sebze Ekleme
-router.post('/addVegetables', (req, res) => {
-    const vegetables = new Vegetables({
+//Çay Ekleme
+router.post('/addPlants', (req, res) => {
+    const vegetables = new Plants({
         name: req.body.name,
         price: req.body.price,
         discount: req.body.discount,
@@ -52,7 +52,7 @@ router.post('/addVegetables', (req, res) => {
                     result_message: {
                         type: "success",
                         title: "Info",
-                        message: "The vegetables has been successfully added."
+                        message: "The Tea has been successfully added."
                     }
                 })
             })
@@ -61,7 +61,7 @@ router.post('/addVegetables', (req, res) => {
                     result_message: {
                         type: "error",
                         title: "Info",
-                        message: "The vegetables could not be added"
+                        message: "The Tea could not be added"
                     }
                 })
             })
@@ -72,15 +72,15 @@ router.post('/addVegetables', (req, res) => {
 
 })
 
-//Sebze Güncelleme
-router.patch('/vegetables/:id', async (req, res) => {
+//Çay Güncelleme
+router.patch('/plants/:id', async (req, res) => {
     try {
 
         if (req.file) {
             req.body.avatar = req.file.path
         }
 
-        await Vegetables.updateOne(
+        await Plants.updateOne(
             {
                 _id: req.params.id
             },
@@ -145,13 +145,13 @@ router.patch('/vegetables/:id', async (req, res) => {
     }
 })
 
-//Sebze Silme
-router.delete('/vegetables/:id', async (req, res) => {
+//Çay Silme
+router.delete('/plants/:id', async (req, res) => {
     Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
         if (data) {
 
             try {
-                const removedProduct = await Vegetables.remove({ _id: req.params.id });
+                const removedProduct = await Plants.remove({ _id: req.params.id });
                 res.json({
                     result: {
                         message: "Ürün başarıyla silindi.."
@@ -189,10 +189,10 @@ router.delete('/vegetables/:id', async (req, res) => {
 
 })
 
-//Sebze Getirme
-router.get('/vegetables/:id', async (req, res) => {
+//Çay Getirme
+router.get('/plants/:id', async (req, res) => {
     try {
-        const vegetables = await Vegetables.findById({ _id: req.params.id });
+        const vegetables = await Plants.findById({ _id: req.params.id });
         res.json({
             result: vegetables,
             result_message: {
@@ -204,7 +204,7 @@ router.get('/vegetables/:id', async (req, res) => {
     } catch (error) {
         res.json({
             result: {
-                message: "Sebze bilgileri bulunamadı.!!"
+                message: "Çay bilgileri bulunamadı.!!"
             },
             result_message: {
                 type: "error",

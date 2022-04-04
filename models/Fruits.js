@@ -54,7 +54,12 @@ var Fruits = new mongoose.Schema({
         type: String,
         default: ""
     },
-
+    basket: {
+        type: Array
+    },
+    oldOrders: {
+        type: Array
+    }
 }, { collection: 'fruits' })
 
 module.exports = mongoose.model('Fruits', Fruits)
