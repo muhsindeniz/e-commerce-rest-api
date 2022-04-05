@@ -5,21 +5,19 @@ const Vegetables = require('../models/Vegetables');
 
 //Sebze Listeleme
 router.get('/vegetables', async (req, res) => {
-    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
-        if (data) {
-            const vegetables = await Vegetables.find();
-            res.json(vegetables)
-        } else {
-            res.json({
-                result: null,
-                result_message: {
-                    type: "token_refresh",
-                    title: "Bilgilendirme",
-                    message: "Bilgileriniz güncellenmiştir."
-                }
-            })
-        }
-    })
+    try {
+        const vegetables = await Vegetables.find();
+        res.json(vegetables)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "error",
+                title: "Bilgilendirme",
+                message: "Veriler yok."
+            }
+        })
+    }
 })
 
 //Sebze Ekleme
@@ -36,9 +34,7 @@ router.post('/addVegetables', (req, res) => {
         carbohydrate: req.body.carbohydrate,
         protein: req.body.protein,
         oil: req.body.oil,
-        adminId: req.body.adminId,
-        basket: req.body.basket,
-        oldOrders: req.body.oldOrders
+        adminId: req.body.adminId
     })
 
     try {
@@ -97,9 +93,7 @@ router.patch('/vegetables/:id', async (req, res) => {
                     carbohydrate: req.body.carbohydrate,
                     protein: req.body.protein,
                     oil: req.body.oil,
-                    adminId: req.body.adminId,
-                    basket: req.body.basket,
-                    oldOrders: req.body.oldOrders
+                    adminId: req.body.adminId
                 }
             }
         )
