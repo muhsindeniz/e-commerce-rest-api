@@ -34,7 +34,8 @@ router.post('/addVegetables', (req, res) => {
         carbohydrate: req.body.carbohydrate,
         protein: req.body.protein,
         oil: req.body.oil,
-        adminId: req.body.adminId
+        adminId: req.body.adminId,
+        pastOrder: req.body.pastOrder
     })
 
     try {
@@ -93,7 +94,8 @@ router.patch('/vegetables/:id', async (req, res) => {
                     carbohydrate: req.body.carbohydrate,
                     protein: req.body.protein,
                     oil: req.body.oil,
-                    adminId: req.body.adminId
+                    adminId: req.body.adminId,
+                    pastOrder: req.body.pastOrder
                 }
             }
         )

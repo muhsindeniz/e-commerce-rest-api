@@ -53,6 +53,9 @@ var Vegetables = new mongoose.Schema({
     adminId: {
         type: String,
         default: ""
+    },
+    pastOrder: {
+        type: Array
     }
 
 }, { collection: 'vegetables' })
