@@ -122,7 +122,8 @@ router.patch('/user/:id', async (req, res) => {
                         password: hashedPass,
                         gender: req.body.gender,
                         birthdayString: req.body.birthdayString,
-                        avatar: req.body.avatar
+                        avatar: req.body.avatar,
+                        pastOrders: req.body.pastOrders
                     }
                 }
             )
@@ -167,6 +168,65 @@ router.patch('/user/:id', async (req, res) => {
             })
         }
     })
+})
+
+//Kullanıcı Sipariş Ekleme
+router.post('/userProductAdd/:id', async (req, res) => {
+
+    const user = new User({
+        pastOrders: req.body.pastOrders
+    })
+
+    const userInfo = await User.findById({ _id: req.params.id });
+    console.log(userInfo)
+    if (userInfo) {
+        try {
+            // user.save()
+            //     .then(user => {
+            //         res.json({
+            //             result_message: {
+            //                 type: "success",
+            //                 title: "Info",
+            //                 message: "Tabrikler Siparişiniz başarıyla verildi"
+            //             }
+            //         })
+            //     })
+            //     .catch(error => {
+            //         res.json({
+            //             result_message: {
+            //                 type: "error",
+            //                 title: "Info",
+            //                 message: "Üzgünüz siparişinzi verilemedi!"
+            //             }
+            //         })
+            //     })
+
+
+        } catch (err) {
+            res.json({
+                result: {
+                    message: "Kullanıcı bilgileri güncellenemedi!"
+                },
+                result_message: {
+                    type: "error",
+                    title: "Bilgi",
+                    message: "Hata"
+                }
+            })
+        }
+    }else{
+        res.json({
+            result: {
+                message: "Kullanıcı bulunamadı!"
+            },
+            result_message: {
+                type: "error",
+                title: "Bilgi",
+                message: "Hata"
+            }
+        })
+    }
+
 })
 
 //Kullanıcı Bilgileri Getirme
@@ -270,10 +330,11 @@ router.post('/address', async (req, res) => {
         district: req.body.district,
         address: req.body.address,
         addressTitle: req.body.addressTitle,
-        phone: req.body.phone
+        phone: req.body.phone,
+        pastOrders: req.body.pastOrders
     })
 
-    const adresControl = await Address.findOne({ email: req.body.email })
+    const adresControl = await Address.findOne({ id: req.body.id })
     if (adresControl) {
         res.json({
             result_message: {

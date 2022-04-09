@@ -1,230 +1,87 @@
 const express = require('express');
 const router = express.Router();
-const Farmer = require('../models/Farmer')
-const bcrypt = require('bcrypt');
-const Admin = require('../models/Admin');
+const Basket = require('../models/Basket');
 
-//Sepet Listeleme
-router.get('/basket', async (req, res) => {
-    try {
-        const users = await Farmer.find();
-        res.json(users)
-    } catch (error) {
-        res.json({
-            result: null,
-            result_message: {
-                type: "token_refresh",
-                title: "Bilgilendirme",
-                message: "Bilgileriniz güncellenmiştir."
-            }
-        })
-    }
-})
+//Sepete ekleme
+router.post('/basket', async (req, res) => {
 
-//Sepet Bilgileri getirme
-router.get('/basket/:id', async (req, res) => {
-    try {
-        const userInfo = await Farmer.findById({ _id: req.params.id });
-        if (userInfo) {
-            res.json({
-                result: userInfo,
-                result_message: {
-                    type: "success",
-                    title: "info",
-                    message: "Information successfully retrieved"
-                }
-            })
-        } else {
-            res.json({
-                result: null,
-                result_message: {
-                    type: "error",
-                    title: "info",
-                    message: "Could not get information!!"
-                }
-            })
-        }
-    } catch (error) {
-        res.json({
-            result: null,
-            result_message: {
-                type: "error",
-                title: "info",
-                message: "Could not get information!!"
-            }
-        })
-    }
-})
+    const basket = new Basket({
+        userId: req.body.userId,
+        products: req.body.products
+    })
 
-//Sepet Silme
-router.delete('/farmer/:id', async (req, res) => {
-    try {
-        const removedUser = await Farmer.remove({ _id: req.params.id });
-        res.json({
-            result: {
-                message: "Çifçi başarıyla silindi.."
-            },
-            result_message: {
-                type: "success",
-                title: "Bilgi",
-                message: "Başarılı"
-            }
-        })
-    } catch (error) {
-        res.json({
-            result: {
-                message: "Çifçi silinemedi.."
-            },
-            result_message: {
-                type: "error",
-                title: "Bilgi",
-                message: "Hata"
-            }
-        })
+    let basketControl = await Basket.findOne({ userId: req.body.userId });
 
-    }
-})
-
-//Çifçi Güncelleme
-router.patch('/farmer/:id', async (req, res) => {
-    bcrypt.hash(req.body.password, 10, async function (err, hashedPass) {
-        try {
-            await Farmer.updateOne(
-                {
-                    _id: req.params.id
-                },
-                {
-                    $set: {
-                        name: req.body.name,
-                        email: req.body.email,
-                        password: hashedPass,
-                        gender: req.body.gender,
-                        birthdayString: req.body.birthdayString,
-                        avatar: req.body.avatar
-                    }
-                }
-            )
-                .then(userInfo => {
-                    if (userInfo) {
-                        res.json({
-                            result: {
-                                message: "Çifçi bilgileri başarıyla güncellendi!"
-                            },
-                            result_message: {
-                                type: "success",
-                                title: "Bilgi",
-                                message: "Başarılı"
-                            }
-                        })
-
-                    } else {
-                        res.json({
-                            result: {
-                                message: "Çifçi bilgileri güncellenemedi!"
-                            },
-                            result_message: {
-                                type: "error",
-                                title: "Bilgi",
-                                message: "Hata"
-                            }
-                        })
+    if (!basketControl) {
+        basket.save()
+            .then(adres => {
+                res.json({
+                    result_message: {
+                        type: "success",
+                        title: "Info",
+                        message: "Ürün Sepete eklendi."
                     }
                 })
-
-
-        } catch (err) {
-            res.json({
-                result: {
-                    message: "Çifçi bilgileri güncellenemedi!"
-                },
-                result_message: {
-                    type: "error",
-                    title: "Bilgi",
-                    message: "Hata"
+            })
+            .catch(error => {
+                res.json({
+                    result_message: {
+                        type: "error",
+                        title: "Info",
+                        message: "Ürün sepete eklenemedi!"
+                    }
+                })
+            })
+    } else {
+        Basket.updateOne({ userId: req.body.userId },
+            {
+                $set: {
+                    products: req.body.products
                 }
             })
-        }
-    })
-})
-
-// //Çifçi Bilgileri Getirme
-// router.post('/farmer/:id', async (req, res) => {
-//     try {
-//         const user = await Farmer.findById({ _id: req.params.id });
-//         res.json({
-//             result: user,
-//             result_message: {
-//                 type: "success",
-//                 title: "Bilgi",
-//                 message: "Başarılı"
-//             }
-//         })
-//     } catch (error) {
-//         res.json({
-//             result: {
-//                 message: "Çifçi silinemedi.."
-//             },
-//             result_message: {
-//                 type: "error",
-//                 title: "Bilgi",
-//                 message: "Hata"
-//             }
-//         })
-
-//     }
-// })
-
-//Çifçi Kaydı
-router.post('/farmer', async (req, res) => {
-    const user = new Farmer({
-        name: req.body.name,
-        email: req.body.email,
-        gender: req.body.gender,
-        phone: req.body.phone,
-        avatar: req.body.avatar,
-        description: req.body.description
-    })
-
-    const userControl = await Farmer.findOne({ email: req.body.email })
-    if (userControl) {
-        res.json({
-            result_message: {
-                type: "error",
-                title: "info",
-                message: "This e-mail address has been used before"
-            }
-        })
-    } else {
-        try {
-            if (req.file) {
-                user.avatar = req.file.path
-            }
-
-            user.save()
-                .then(user => {
+            .then(userInfo => {
+                if (userInfo) {
                     res.json({
+                        result: {
+                            message: "Ürün sepete eklendi.."
+                        },
                         result_message: {
                             type: "success",
-                            title: "Info",
-                            message: "Registration done successfully."
+                            title: "Bilgi",
+                            message: "Başarılı"
                         }
                     })
-                })
-                .catch(error => {
+
+                } else {
                     res.json({
+                        result: null,
                         result_message: {
                             type: "error",
-                            title: "Info",
-                            message: "Registration failed."
+                            title: "Bilgi",
+                            message: "Ürün sepete eklenemedi!"
                         }
                     })
-                })
-
-        } catch (error) {
-            res.json({ message: error })
-        }
+                }
+            })
     }
-
 })
+
+//Sepete güncelleme
+router.get('/basket/:id', async (req, res) => {
+    try {
+        const basket = await Basket.findOne({ userId: req.params.id });
+        res.json(basket)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "error",
+                title: "Bilgilendirme",
+                message: "Sepet Boş"
+            }
+        })
+    }
+})
+
 
 module.exports = router;

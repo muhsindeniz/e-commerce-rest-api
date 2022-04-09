@@ -29,7 +29,8 @@ router.post('/register', (req, res) => {
             password: hashedPass,
             gender: req.body.gender,
             birthdayString: req.body.birthdayString,
-            avatar: req.body.avatar
+            avatar: req.body.avatar,
+            pastOrders: req.body.pastOrders
         })
 
         const userControl = await User.findOne({ email: req.body.email })
