@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User')
 const bcrypt = require('bcrypt');
-const Joi = require('@hapi/joi')
-const jwt = require('jsonwebtoken');
 const Address = require('../models/Address');
 const Admin = require('../models/Admin');
 
@@ -171,61 +169,9 @@ router.patch('/user/:id', async (req, res) => {
 })
 
 //Kullanıcı Sipariş Ekleme
-router.post('/userProductAdd/:id', async (req, res) => {
+router.post('/order/:id', async (req, res) => {
 
-    const user = new User({
-        pastOrders: req.body.pastOrders
-    })
-
-    const userInfo = await User.findById({ _id: req.params.id });
-    console.log(userInfo)
-    if (userInfo) {
-        try {
-            // user.save()
-            //     .then(user => {
-            //         res.json({
-            //             result_message: {
-            //                 type: "success",
-            //                 title: "Info",
-            //                 message: "Tabrikler Siparişiniz başarıyla verildi"
-            //             }
-            //         })
-            //     })
-            //     .catch(error => {
-            //         res.json({
-            //             result_message: {
-            //                 type: "error",
-            //                 title: "Info",
-            //                 message: "Üzgünüz siparişinzi verilemedi!"
-            //             }
-            //         })
-            //     })
-
-
-        } catch (err) {
-            res.json({
-                result: {
-                    message: "Kullanıcı bilgileri güncellenemedi!"
-                },
-                result_message: {
-                    type: "error",
-                    title: "Bilgi",
-                    message: "Hata"
-                }
-            })
-        }
-    }else{
-        res.json({
-            result: {
-                message: "Kullanıcı bulunamadı!"
-            },
-            result_message: {
-                type: "error",
-                title: "Bilgi",
-                message: "Hata"
-            }
-        })
-    }
+    
 
 })
 

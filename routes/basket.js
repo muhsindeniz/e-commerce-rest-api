@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Basket = require('../models/Basket');
+var mongo = require('mongodb');
 
 //Sepete ekleme
 router.post('/basket', async (req, res) => {
@@ -81,6 +82,46 @@ router.get('/basket/:id', async (req, res) => {
             }
         })
     }
+})
+
+//Sepeti silme
+router.delete('/basket/:id', (req, res) => {
+    const couponControl = Basket.findOne({ userId: req.params.id });
+    if (couponControl) {
+        var o_id = new mongo.ObjectID(couponControl._id);
+        let removeCode = Basket.remove({ _id: o_id });
+
+        if (removeCode) {
+            res.json({
+                result: true,
+                result_message: {
+                    type: "success",
+                    title: "Bilgi",
+                    message: `Siparişiniz başarıyla verildi.`
+                }
+            })
+        } else {
+            res.json({
+                result: false,
+                result_message: {
+                    type: "error",
+                    title: "Bilgi",
+                    message: `Üzgünüz siparişiniz verilemedi!`
+                }
+            })
+        }
+
+    } else {
+        res.json({
+            result: false,
+            result_message: {
+                type: "error",
+                title: "Bilgi",
+                message: `Üzgünüz siparişiniz verilemedi!`
+            }
+        })
+    }
+
 })
 
 
