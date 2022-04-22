@@ -32,7 +32,7 @@ var Plants = new mongoose.Schema({
     },
     productCategory: {
         type: String,
-        default: "Fruit"
+        default: "Plants"
     },
     calorie: {
         type: String,
@@ -56,6 +56,10 @@ var Plants = new mongoose.Schema({
     },
     pastOrder: {
         type: Array
+    },
+    stock: {
+        type: String,
+        default: ""
     }
 
 }, { collection: 'plants' })

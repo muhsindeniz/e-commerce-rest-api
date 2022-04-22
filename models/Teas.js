@@ -32,7 +32,7 @@ var Teas = new mongoose.Schema({
     },
     productCategory: {
         type: String,
-        default: "Fruit"
+        default: "Teas"
     },
     calorie: {
         type: String,
@@ -56,6 +56,9 @@ var Teas = new mongoose.Schema({
     },
     pastOrder: {
         type: Array
+    },
+    stock: {
+        type: String
     }
 
 }, { collection: 'teas' })

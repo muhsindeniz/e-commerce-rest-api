@@ -36,7 +36,8 @@ router.post('/addTeas', (req, res) => {
         carbohydrate: req.body.carbohydrate,
         protein: req.body.protein,
         oil: req.body.oil,
-        adminId: req.body.adminId
+        adminId: req.body.adminId,
+        stock: req.body.stock
     })
 
     try {
@@ -95,7 +96,8 @@ router.patch('/teas/:id', async (req, res) => {
                     carbohydrate: req.body.carbohydrate,
                     protein: req.body.protein,
                     oil: req.body.oil,
-                    adminId: req.body.adminId
+                    adminId: req.body.adminId,
+                    stock: req.body.stock
                 }
             }
         )

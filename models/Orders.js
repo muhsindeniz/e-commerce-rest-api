@@ -27,6 +27,13 @@ var Orders = new mongoose.Schema({
     },
     estimatedArrivalDate: {
         type: String
+    },
+    discountCodeAmount: {
+        type: String,
+        default: 0
+    },
+    totalPricePaid: {
+        type: String
     }
 }, { collection: 'orders' })
 

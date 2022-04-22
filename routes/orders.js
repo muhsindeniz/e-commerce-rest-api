@@ -2,6 +2,10 @@ const express = require('express');
 const Admin = require('../models/Admin');
 const router = express.Router();
 const Orders = require('../models/Orders');
+const Vegetables = require('../models/Vegetables');
+const Fruits = require('../models/Fruits');
+const Teas = require('../models/Teas');
+const Plants = require('../models/Plants');
 
 //Sipariş Listeleme
 router.get('/orders', async (req, res) => {
@@ -28,33 +32,141 @@ router.post('/addOrders', (req, res) => {
         basket: req.body.basket,
         address: req.body.address,
         orderStatus: req.body.orderStatus,
-        estimatedArrivalDate: req.body.estimatedArrivalDate
+        estimatedArrivalDate: req.body.estimatedArrivalDate,
+        discountCodeAmount: req.body.discountCodeAmount,
+        totalPricePaid: req.body.totalPricePaid
     })
 
-    try {
-        orders.save()
-            .then(user => {
-                res.json({
-                    result_message: {
-                        type: "success",
-                        title: "Info",
-                        message: "The product has been successfully ordered."
-                    }
-                })
-            })
-            .catch(error => {
-                res.json({
-                    result_message: {
-                        type: "error",
-                        title: "Info",
-                        message: "The order could not be fulfilled!"
-                    }
-                })
-            })
+    if (req.body.basket) {
+        req.body.basket.map(data => {
+            if (data.category == "vegetables") {
+                Vegetables.findById(data._id, function (err, docs) {
+                    let stok = parseInt(docs.stock) - data.quntity
+                    Vegetables.updateOne(
+                        {
+                            _id: docs._id
+                        },
+                        {
+                            $set: {
+                                stock: stok
+                            }
+                        }
+                    ).then(resp => {
+                        res.json({
+                            result: {
+                                message: "Siparişiniz başarıyla verildi."
+                            },
+                            result_message: {
+                                type: "success",
+                                title: "Bilgi",
+                                message: "Başarılı"
+                            }
+                        })
+                    })
+                });
+            } else if (data.category == "Fruit") {
+                Fruits.findById(data._id, function (err, docs) {
+                    let stok = parseInt(docs.stock) - data.quntity
 
-    } catch (error) {
-        res.json({ message: error })
+                    Fruits.updateOne(
+                        {
+                            _id: docs._id
+                        },
+                        {
+                            $set: {
+                                stock: stok
+                            }
+                        }
+                    ).then(resp => {
+                        res.json({
+                            result: {
+                                message: "Siparişiniz başarıyla verildi."
+                            },
+                            result_message: {
+                                type: "success",
+                                title: "Bilgi",
+                                message: "Başarılı"
+                            }
+                        })
+                    })
+                });
+            } else if (data.category == "Teas") {
+                Teas.findById(data._id, function (err, docs) {
+                    let stok = parseInt(docs.stock) - data.quntity
+
+                    Teas.updateOne(
+                        {
+                            _id: docs._id
+                        },
+                        {
+                            $set: {
+                                stock: stok
+                            }
+                        }
+                    ).then(resp => {
+                        res.json({
+                            result: {
+                                message: "Siparişiniz başarıyla verildi."
+                            },
+                            result_message: {
+                                type: "success",
+                                title: "Bilgi",
+                                message: "Başarılı"
+                            }
+                        })
+                    })
+                });
+            } else {
+                Plants.findById(data._id, function (err, docs) {
+                    let stok = parseInt(docs.stock) - data.quntity
+
+                    Plants.updateOne(
+                        {
+                            _id: docs._id
+                        },
+                        {
+                            $set: {
+                                stock: stok
+                            }
+                        }
+                    ).then(resp => {
+                        res.json({
+                            result: {
+                                message: "Siparişiniz başarıyla verildi."
+                            },
+                            result_message: {
+                                type: "success",
+                                title: "Bilgi",
+                                message: "Başarılı"
+                            }
+                        })
+                    })
+                });
+            }
+        })
     }
+
+    orders.save()
+        .then(user => {
+            res.json({
+                result_message: {
+                    type: "success",
+                    title: "Info",
+                    message: "The product has been successfully added."
+                }
+            })
+        })
+        .catch(error => {
+            res.json({
+                result_message: {
+                    type: "error",
+                    title: "Info",
+                    message: "The product could not be added"
+                }
+            })
+        })
+
+
 
 })
 
@@ -72,7 +184,9 @@ router.patch('/orders/:id', async (req, res) => {
                     basket: req.body.basket,
                     address: req.body.address,
                     orderStatus: req.body.orderStatus,
-                    estimatedArrivalDate: req.body.estimatedArrivalDate
+                    estimatedArrivalDate: req.body.estimatedArrivalDate,
+                    discountCodeAmount: req.body.discountCodeAmount,
+                    totalPricePaid: req.body.totalPricePaid
                 }
             }
         )
@@ -165,6 +279,33 @@ router.delete('/orders/:id', async (req, res) => {
 router.get('/orders/:id', async (req, res) => {
     try {
         const orders = await Orders.findById({ _id: req.params.id });
+        res.json({
+            result: orders,
+            result_message: {
+                type: "success",
+                title: "Bilgi",
+                message: "Başarılı"
+            }
+        })
+    } catch (error) {
+        res.json({
+            result: {
+                message: "Sipariş bilgileri bulunamadı.!!"
+            },
+            result_message: {
+                type: "error",
+                title: "Bilgi",
+                message: "Hata"
+            }
+        })
+
+    }
+})
+
+//Kullanıcı Siparişi Getirme
+router.get('/userOrders/:id', async (req, res) => {
+    try {
+        const orders = await Orders.find({ userId: req.params.id });
         res.json({
             result: orders,
             result_message: {

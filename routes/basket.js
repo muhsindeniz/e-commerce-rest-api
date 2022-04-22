@@ -4,14 +4,14 @@ const Basket = require('../models/Basket');
 var mongo = require('mongodb');
 
 //Sepete ekleme
-router.post('/basket', async (req, res) => {
+router.post('/basket', (req, res) => {
 
     const basket = new Basket({
         userId: req.body.userId,
         products: req.body.products
     })
 
-    let basketControl = await Basket.findOne({ userId: req.body.userId });
+    let basketControl = Basket.findOne({ userId: req.body.userId });
 
     if (!basketControl) {
         basket.save()
@@ -41,28 +41,25 @@ router.post('/basket', async (req, res) => {
                 }
             })
             .then(userInfo => {
-                if (userInfo) {
-                    res.json({
-                        result: {
-                            message: "Ürün sepete eklendi.."
-                        },
-                        result_message: {
-                            type: "success",
-                            title: "Bilgi",
-                            message: "Başarılı"
-                        }
-                    })
-
-                } else {
-                    res.json({
-                        result: null,
-                        result_message: {
-                            type: "error",
-                            title: "Bilgi",
-                            message: "Ürün sepete eklenemedi!"
-                        }
-                    })
-                }
+                res.json({
+                    result: {
+                        message: "Ürün sepete eklendi.."
+                    },
+                    result_message: {
+                        type: "success",
+                        title: "Bilgi",
+                        message: "Başarılı"
+                    }
+                })
+            }).catch(err => {
+                res.json({
+                    result: null,
+                    result_message: {
+                        type: "error",
+                        title: "Bilgi",
+                        message: "Ürün sepete eklenemedi!"
+                    }
+                })
             })
     }
 })

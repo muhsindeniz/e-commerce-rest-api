@@ -56,6 +56,10 @@ var Fruits = new mongoose.Schema({
     },
     pastOrder: {
         type: Array
+    },
+    stock: {
+        type: String,
+        default: ""
     }
 }, { collection: 'fruits' })
 
