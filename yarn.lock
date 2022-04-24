@@ -167,6 +167,11 @@ bcrypt@^5.0.1:
     "@mapbox/node-pre-gyp" "^1.0.0"
     node-addon-api "^3.1.0"
 
+big-integer@^1.6.48:
+  version "1.6.51"
+  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
+  integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
+
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
@@ -822,6 +827,13 @@ iconv-lite@0.4.24:
   integrity sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
+
+id-auto-increment@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/id-auto-increment/-/id-auto-increment-1.0.1.tgz#c6df1f88025bca0287c653d6de8dfcf980e54310"
+  integrity sha512-PruprOVAXPWJ/kWvoJjeenol+ZF3mCcU6h9+8LkSzdILEXV45sC1BpijtQdlhXvkQy0tjXLcLkadAfbzVSLdRQ==
+  dependencies:
+    big-integer "^1.6.48"
 
 ieee754@^1.1.13:
   version "1.2.1"

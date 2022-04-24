@@ -34,6 +34,9 @@ var Orders = new mongoose.Schema({
     },
     totalPricePaid: {
         type: String
+    },
+    orderNumber: {
+        type: Number
     }
 }, { collection: 'orders' })
 

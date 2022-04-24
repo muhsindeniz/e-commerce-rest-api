@@ -6,6 +6,7 @@ const Vegetables = require('../models/Vegetables');
 const Fruits = require('../models/Fruits');
 const Teas = require('../models/Teas');
 const Plants = require('../models/Plants');
+const idAutoIncrement = require('id-auto-increment');
 
 //Sipariş Listeleme
 router.get('/orders', async (req, res) => {
@@ -25,7 +26,8 @@ router.get('/orders', async (req, res) => {
 })
 
 //Sipariş Ekleme
-router.post('/addOrders', (req, res) => {
+router.post('/addOrders', async (req, res) => {
+    const id = await idAutoIncrement();
     const orders = new Orders({
         userId: req.body.userId,
         createdAt: req.body.createdAt,
@@ -34,7 +36,8 @@ router.post('/addOrders', (req, res) => {
         orderStatus: req.body.orderStatus,
         estimatedArrivalDate: req.body.estimatedArrivalDate,
         discountCodeAmount: req.body.discountCodeAmount,
-        totalPricePaid: req.body.totalPricePaid
+        totalPricePaid: req.body.totalPricePaid,
+        orderNumber: id
     })
 
     if (req.body.basket) {

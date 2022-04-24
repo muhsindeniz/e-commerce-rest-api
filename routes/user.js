@@ -153,11 +153,44 @@ router.patch('/user/:id', async (req, res) => {
     })
 })
 
-//Kullanıcı Sipariş Ekleme
-router.post('/order/:id', async (req, res) => {
+//Kullanıcı Token Güncelleme
+router.patch('/userUpdateToken/:id', async (req, res) => {
+    await User.updateOne(
+        {
+            _id: req.params.id
+        },
+        {
+            $set: {
+                token: req.body.token
+            }
+        }
+    )
+        .then(userInfo => {
+            if (userInfo) {
+                res.json({
+                    result: {
+                        message: "Token güncellendi"
+                    },
+                    result_message: {
+                        type: "success",
+                        title: "Bilgi",
+                        message: "Başarılı"
+                    }
+                })
 
-
-
+            } else {
+                res.json({
+                    result: {
+                        message: "Token güncellenemedi!"
+                    },
+                    result_message: {
+                        type: "error",
+                        title: "Bilgi",
+                        message: "Hata"
+                    }
+                })
+            }
+        })
 })
 
 //Kullanıcı Bilgileri Getirme
