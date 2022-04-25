@@ -5,21 +5,19 @@ const Plants = require('../models/Plants');
 
 //Çay Listeleme
 router.get('/plants', async (req, res) => {
-    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
-        if (data) {
-            const vegetables = await Plants.find();
-            res.json(vegetables)
-        } else {
-            res.json({
-                result: null,
-                result_message: {
-                    type: "token_refresh",
-                    title: "Bilgilendirme",
-                    message: "Bilgileriniz güncellenmiştir."
-                }
-            })
-        }
-    })
+    try {
+        const vegetables = await Plants.find();
+        res.json(vegetables)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "token_refresh",
+                title: "Bilgilendirme",
+                message: "Bilgileriniz güncellenmiştir."
+            }
+        })
+    }
 })
 
 //Çay Ekleme

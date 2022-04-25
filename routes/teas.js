@@ -5,21 +5,20 @@ const Teas = require('../models/Teas');
 
 //Çay Listeleme
 router.get('/teas', async (req, res) => {
-    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
-        if (data) {
-            const vegetables = await Teas.find();
-            res.json(vegetables)
-        } else {
-            res.json({
-                result: null,
-                result_message: {
-                    type: "token_refresh",
-                    title: "Bilgilendirme",
-                    message: "Bilgileriniz güncellenmiştir."
-                }
-            })
-        }
-    })
+    try {
+        const vegetables = await Teas.find();
+        res.json(vegetables)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "token_refresh",
+                title: "Bilgilendirme",
+                message: "Bilgileriniz güncellenmiştir."
+            }
+        })
+    }
+
 })
 
 //Çay Ekleme

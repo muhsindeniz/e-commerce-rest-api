@@ -5,21 +5,19 @@ const Fruits = require('../models/Fruits');
 
 //Meyve Listeleme
 router.get('/fruit', async (req, res) => {
-    Admin.findOne({ $or: [{ token: req.headers.authorization }] }, async (error, data) => {
-        if (data) {
-            const vegetables = await Fruits.find();
-            res.json(vegetables)
-        } else {
-            res.json({
-                result: null,
-                result_message: {
-                    type: "token_refresh",
-                    title: "Bilgilendirme",
-                    message: "Bilgileriniz güncellenmiştir."
-                }
-            })
-        }
-    })
+    try {
+        const vegetables = await Fruits.find();
+        res.json(vegetables)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "error",
+                title: "Bilgilendirme",
+                message: "Veriler yok."
+            }
+        })
+    }
 })
 
 //Meyve Ekleme
