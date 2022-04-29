@@ -4,14 +4,14 @@ const Basket = require('../models/Basket');
 var mongo = require('mongodb');
 
 //Sepete ekleme
-router.post('/basket', (req, res) => {
+router.post('/basket', async (req, res) => {
 
     const basket = new Basket({
         userId: req.body.userId,
         products: req.body.products
     })
 
-    let basketControl = Basket.findOne({ userId: req.body.userId });
+    let basketControl = await Basket.findOne({ userId: req.body.userId });
 
     if (!basketControl) {
         basket.save()
@@ -82,11 +82,11 @@ router.get('/basket/:id', async (req, res) => {
 })
 
 //Sepeti silme
-router.delete('/basket/:id', (req, res) => {
-    const couponControl = Basket.findOne({ userId: req.params.id });
+router.delete('/basket/:id', async (req, res) => {
+    const couponControl = await Basket.findOne({ userId: req.params.id });
     if (couponControl) {
         var o_id = new mongo.ObjectID(couponControl._id);
-        let removeCode = Basket.remove({ _id: o_id });
+        let removeCode = await Basket.remove({ _id: o_id });
 
         if (removeCode) {
             res.json({

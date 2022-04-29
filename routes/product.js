@@ -1,5 +1,8 @@
 const express = require('express');
 const Admin = require('../models/Admin');
+const Fruits = require('../models/Fruits');
+const Plants = require('../models/Plants');
+const Teas = require('../models/Teas');
 const router = express.Router();
 const Vegetables = require('../models/Vegetables');
 

@@ -7,6 +7,7 @@ const Fruits = require('../models/Fruits');
 const Teas = require('../models/Teas');
 const Plants = require('../models/Plants');
 const idAutoIncrement = require('id-auto-increment');
+const AllOrders = require('../models/AllOrders');
 
 //Sipariş Listeleme
 router.get('/orders', async (req, res) => {
@@ -169,7 +170,13 @@ router.post('/addOrders', async (req, res) => {
             })
         })
 
-
+    req.body.basket.map(resp => {
+        const allOrders = new AllOrders({
+            category: resp.category,
+            data: Number(resp.total)
+        })
+        allOrders.save()
+    })
 
 })
 
@@ -332,5 +339,22 @@ router.get('/userOrders/:id', async (req, res) => {
     }
 })
 
+
+//Tüm Siparişleri Listeleme
+router.get('/allOrders', async (req, res) => {
+    try {
+        const orders = await AllOrders.find();
+        res.json(orders)
+    } catch (error) {
+        res.json({
+            result: null,
+            result_message: {
+                type: "error",
+                title: "Bilgilendirme",
+                message: "Veriler yok."
+            }
+        })
+    }
+})
 
 module.exports = router;
