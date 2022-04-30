@@ -17,6 +17,7 @@ const coupon = require('./routes/coupon');
 const orders = require('./routes/orders');
 const dietList = require('./routes/dietList');
 const subscribe = require('./routes/subscribe');
+const search = require('./routes/search');
 
 require('dotenv/config')
 
@@ -37,7 +38,8 @@ app.use('/api', upload.single('avatar'),
     coupon,
     orders,
     dietList,
-    subscribe
+    subscribe,
+    search
 );
 app.post('/single', upload.single('image'), (req, res) => {
     res.send({
