@@ -13,7 +13,7 @@ var Orders = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: today
+        default: Date.now
     },
     basket: {
         type: Array,
