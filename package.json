@@ -18,7 +18,7 @@
     "http-errors": "^2.0.0",
     "id-auto-increment": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.1.4",
+    "mongoose": "^6.4.6",
     "multer": "^1.4.4",
     "nodemon": "^2.0.15"
   },
